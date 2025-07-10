@@ -19,6 +19,7 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            padding-bottom: 60px;
         }
 
         .header {
@@ -44,23 +45,24 @@
             flex-wrap: wrap;
             justify-content: center;
             max-width: 1200px;
+            width: 100%;
         }
 
         .notecard {
             width: 500px;
-            height: 300px;
+            min-height: 350px;
             background: white;
             border-radius: 12px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.2);
             padding: 20px;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .notecard-front {
             display: flex;
             flex-direction: column;
-            height: 100%;
+            min-height: 320px;
         }
 
         .card-header {
@@ -88,20 +90,23 @@
         }
 
         .section {
-            margin-bottom: 12px;
+            margin-bottom: 15px;
+            flex-shrink: 0;
         }
 
         .section-title {
             font-weight: bold;
             color: #4682B4;
             font-size: 13px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            line-height: 1.2;
         }
 
         .alignment-options {
             display: flex;
             gap: 15px;
             margin-bottom: 8px;
+            flex-wrap: wrap;
         }
 
         .alignment-option {
@@ -125,6 +130,7 @@
             font-size: 11px;
             resize: none;
             background: transparent;
+            min-height: 20px;
         }
 
         .text-input:focus {
@@ -181,7 +187,7 @@
             color: #333;
             columns: 2;
             column-gap: 15px;
-            height: 100%;
+            min-height: 320px;
             overflow: hidden;
         }
 
@@ -219,7 +225,7 @@
 
         .controls {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 30px;
             margin-bottom: 40px;
             padding-bottom: 20px;
         }
@@ -241,14 +247,6 @@
             background: #5a9bd4;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(70, 130, 180, 0.4);
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-        }
-
-        .btn-secondary:hover {
-            background: #7c8591;
         }
 
         /* Print styles */
@@ -306,8 +304,7 @@
             .notecard {
                 width: 90vw;
                 max-width: 400px;
-                height: auto;
-                min-height: 300px;
+                min-height: 400px;
             }
 
             .header h1 {
@@ -567,11 +564,6 @@
             }
         }
 
-        function saveData() {
-            saveFormData();
-            alert('Progress saved! Your data will be restored when you return to this page.');
-        }
-
         // Auto-save on input changes
         document.addEventListener('input', saveFormData);
         document.addEventListener('change', saveFormData);
@@ -581,6 +573,18 @@
 
         // Set today's date by default
         document.getElementById('sessionDate').value = new Date().toISOString().split('T')[0];
+
+        // Single checkbox selection for lock-in actions
+        document.querySelectorAll('.lock-in-option input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    // Uncheck others
+                    document.querySelectorAll('.lock-in-option input[type="checkbox"]').forEach(other => {
+                        if (other !== this) other.checked = false;
+                    });
+                }
+            });
+        });
     </script>
 </body>
 </html>
