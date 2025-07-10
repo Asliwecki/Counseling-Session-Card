@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)file:///C:/Users/alexs/Downloads/session_notecard_app.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Integration Notecard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .card-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
+        }
+
+        .notecard {
+            width: 500px;
+            height: 300px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notecard-front {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4682B4;
+        }
+
+        .date-session {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .date-session input {
+            border: none;
+            border-bottom: 1px solid #ccc;
+            padding: 2px 5px;
+            font-size: 14px;
+            width: 80px;
+        }
+
+        .section {
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: #4682B4;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .alignment-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 8px;
+        }
+
+        .alignment-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .alignment-option input[type="radio"] {
+            width: 14px;
+            height: 14px;
+        }
+
+        .text-input {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #ddd;
+            padding: 4px 0;
+            font-size: 11px;
+            resize: none;
+            background: transparent;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-bottom-color: #4682B4;
+        }
+
+        .practice-section {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 5px 10px;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .practice-label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .lock-in-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .lock-in-option {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .lock-in-option input[type="checkbox"] {
+            width: 12px;
+            height: 12px;
+        }
+
+        .other-input {
+            border: none;
+            border-bottom: 1px solid #ddd;
+            font-size: 10px;
+            width: 80px;
+            padding: 2px;
+        }
+
+        /* Back side styling */
+        .notecard-back {
+            padding: 15px;
+            font-size: 9px;
+            line-height: 1.3;
+            color: #333;
+            columns: 2;
+            column-gap: 15px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .back-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #4682B4;
+            text-align: center;
+            margin-bottom: 10px;
+            column-span: all;
+        }
+
+        .affirmation {
+            display: inline-block;
+            margin: 2px 4px 2px 0;
+            padding: 2px 6px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            break-inside: avoid;
+        }
+
+        .affirmation:hover {
+            background: #e3f2fd;
+            border-color: #4682B4;
+        }
+
+        .affirmation.selected {
+            background: #4682B4;
+            color: white;
+            border-color: #4682B4;
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: #4682B4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(70, 130, 180, 0.3);
+        }
+
+        .btn:hover {
+            background: #5a9bd4;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(70, 130, 180, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #7c8591;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+
+            .header, .controls {
+                display: none;
+            }
+
+            .card-container {
+                display: block;
+                margin: 0;
+                padding: 0;
+            }
+
+            .notecard {
+                width: 5in;
+                height: 3in;
+                margin: 0.25in;
+                box-shadow: none;
+                border: 1px solid #ccc;
+                page-break-inside: avoid;
+                font-size: 12px;
+            }
+
+            .notecard-back {
+                font-size: 8px;
+                columns: 2;
+                column-gap: 10px;
+            }
+
+            .back-title {
+                font-size: 10px;
+            }
+
+            .affirmation {
+                font-size: 7px;
+                padding: 1px 3px;
+                margin: 1px;
+            }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .card-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .notecard {
+                width: 90vw;
+                max-width: 400px;
+                height: auto;
+                min-height: 300px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .alignment-options {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .lock-in-options {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .flip-instruction {
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Session Integration Notecard</h1>
+        <p>Complete your reflection and print your personalized notecard</p>
+    </div>
+
+    <div class="card-container">
+        <!-- Front Side -->
+        <div class="notecard">
+            <div class="notecard-front">
+                <div class="card-header">
+                    <div class="date-session">
+                        <label>Date: <input type="date" id="sessionDate"></label>
+                        <label>Session: <input type="number" id="sessionNumber" min="1" placeholder="1"></label>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">ALIGNMENT CHECK (How connected to my authentic self do I feel right now?)</div>
+                    <div class="alignment-options">
+                        <label class="alignment-option">
+                            <input type="radio" name="alignment" value="scattered"> Scattered
+                        </label>
+                        <label class="alignment-option">
+                            <input type="radio" name="alignment" value="somewhat"> Somewhat
+                        </label>
+                        <label class="alignment-option">
+                            <input type="radio" name="alignment" value="centered"> Centered
+                        </label>
+                        <label class="alignment-option">
+                            <input type="radio" name="alignment" value="deeply"> Deeply aligned
+                        </label>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">WHAT CLICKED (Something that shifted or became clear today):</div>
+                    <textarea class="text-input" rows="2" placeholder="Write your insight here..."></textarea>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">WHAT I WANT TO PRACTICE (My small new way of being/chosen identity):</div>
+                    <div class="practice-section">
+                        <span class="practice-label">Think/Imagine:</span>
+                        <input type="text" class="text-input" placeholder="New thought pattern...">
+                        <span class="practice-label">Feel/Embody:</span>
+                        <input type="text" class="text-input" placeholder="Desired feeling state...">
+                        <span class="practice-label">Act/Behave:</span>
+                        <input type="text" class="text-input" placeholder="New behavior or action...">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">MY DECISION/DEDICATION (This week I'm choosing to):</div>
+                    <textarea class="text-input" rows="2" placeholder="Your commitment this week..."></textarea>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">LOCK IT IN CNS (Next 45 minutes - anchor this shift)</div>
+                    <div class="lock-in-options">
+                        <label class="lock-in-option">
+                            <input type="checkbox"> Feel this in my body
+                        </label>
+                        <label class="lock-in-option">
+                            <input type="checkbox"> Write about it
+                        </label>
+                        <label class="lock-in-option">
+                            <input type="checkbox"> Celebrate
+                        </label>
+                        <label class="lock-in-option">
+                            <input type="checkbox"> Take one aligned action
+                        </label>
+                        <label class="lock-in-option">
+                            <input type="checkbox"> Other: <input type="text" class="other-input" placeholder="specify...">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Side -->
+        <div class="notecard">
+            <div class="notecard-back">
+                <div class="back-title">Circle the words/phrases that resonate with you today</div>
+                
+                <span class="affirmation">I am doing the best I can right now</span>
+                <span class="affirmation">My pain is real and valid</span>
+                <span class="affirmation">I am learning to be gentle with myself</span>
+                <span class="affirmation">I am willing to try again</span>
+                <span class="affirmation">I can take one small step</span>
+                <span class="affirmation">I am allowed to struggle</span>
+                <span class="affirmation">I don't have to be perfect to be loved</span>
+                <span class="affirmation">I can ask for help</span>
+                <span class="affirmation">My journey matters</span>
+                <span class="affirmation">I am not my mistakes</span>
+                <span class="affirmation">I can be broken and still worthy</span>
+                <span class="affirmation">I am learning what I need</span>
+                <span class="affirmation">I can go slow</span>
+                <span class="affirmation">I am allowed to heal at my own pace</span>
+                <span class="affirmation">I can be kind to my struggling parts</span>
+                <span class="affirmation">My feelings are valid</span>
+                <span class="affirmation">I am safe</span>
+                <span class="affirmation">I belong here</span>
+                <span class="affirmation">I forgive myself</span>
+                <span class="affirmation">I trust myself to choose</span>
+                <span class="affirmation">I can handle this</span>
+                <span class="affirmation">I can be with my fear</span>
+                <span class="affirmation">I choose to begin again</span>
+                <span class="affirmation">I am changing and growing</span>
+                <span class="affirmation">I give myself permission</span>
+                <span class="affirmation">I choose my authentic self</span>
+                <span class="affirmation">I trust my inner wisdom</span>
+                <span class="affirmation">I choose courage over comfort</span>
+                <span class="affirmation">I choose presence over perfection</span>
+                <span class="affirmation">I am connected to something larger</span>
+                <span class="affirmation">I choose to learn, not just achieve</span>
+                <span class="affirmation">I celebrate small changes</span>
+                <span class="affirmation">I choose abundance over scarcity</span>
+                <span class="affirmation">I notice my patterns with kindness</span>
+                <span class="affirmation">I can handle uncertainty</span>
+                <span class="affirmation">I give myself compassion</span>
+                <span class="affirmation">I am exactly where I need to be</span>
+                <span class="affirmation">I trust what's emerging</span>
+                <span class="affirmation">I am creating my life</span>
+                <span class="affirmation">I am a loving person</span>
+                <span class="affirmation">I am enough as I am</span>
+                <span class="affirmation">I am worthy of love</span>
+                <span class="affirmation">Heal</span>
+                <span class="affirmation">Trust</span>
+                <span class="affirmation">Breathe</span>
+                <span class="affirmation">Believe</span>
+                <span class="affirmation">Create</span>
+                <span class="affirmation">Ground</span>
+                <span class="affirmation">Shift</span>
+                <span class="affirmation">Release</span>
+                <span class="affirmation">Hope</span>
+                <span class="affirmation">Feel</span>
+                <span class="affirmation">Grow</span>
+                <span class="affirmation">Accept</span>
+                <span class="affirmation">Reclaim</span>
+                <span class="affirmation">Peace</span>
+                <span class="affirmation">Wisdom</span>
+                <span class="affirmation">Resilience</span>
+                <span class="affirmation">Compassion</span>
+                <span class="affirmation">Belonging</span>
+                <span class="affirmation">Mindfulness</span>
+                <span class="affirmation">Balance</span>
+                <span class="affirmation">Curiosity</span>
+                <span class="affirmation">Adventure</span>
+                <span class="affirmation">Service</span>
+                <span class="affirmation">Gentle</span>
+                <span class="affirmation">Patient</span>
+                <span class="affirmation">Courage</span>
+                <span class="affirmation">Kind</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="flip-instruction">
+        Click words on the back side to highlight them • Fill out the front side • Print both sides
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="clearForm()">Clear All</button>
+        <button class="btn" onclick="window.print()">Print Notecard</button>
+        <button class="btn btn-secondary" onclick="saveData()">Save Progress</button>
+    </div>
+
+    <script>
+        // Make affirmations selectable
+        document.querySelectorAll('.affirmation').forEach(affirmation => {
+            affirmation.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+
+        // Auto-save form data
+        function saveFormData() {
+            const formData = {
+                date: document.getElementById('sessionDate').value,
+                session: document.getElementById('sessionNumber').value,
+                alignment: document.querySelector('input[name="alignment"]:checked')?.value || '',
+                clicked: document.querySelector('.section:nth-child(3) textarea').value,
+                think: document.querySelector('.practice-section input:nth-child(2)').value,
+                feel: document.querySelector('.practice-section input:nth-child(4)').value,
+                act: document.querySelector('.practice-section input:nth-child(6)').value,
+                decision: document.querySelector('.section:nth-child(5) textarea').value,
+                lockIn: Array.from(document.querySelectorAll('.lock-in-option input[type="checkbox"]:checked')).map(cb => cb.nextSibling.textContent.trim()),
+                otherAction: document.querySelector('.other-input').value,
+                selectedAffirmations: Array.from(document.querySelectorAll('.affirmation.selected')).map(af => af.textContent)
+            };
+            localStorage.setItem('sessionNotecard', JSON.stringify(formData));
+        }
+
+        function loadFormData() {
+            const saved = localStorage.getItem('sessionNotecard');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('sessionDate').value = data.date || '';
+                document.getElementById('sessionNumber').value = data.session || '';
+                if (data.alignment) {
+                    document.querySelector(`input[name="alignment"][value="${data.alignment}"]`).checked = true;
+                }
+                document.querySelector('.section:nth-child(3) textarea').value = data.clicked || '';
+                document.querySelector('.practice-section input:nth-child(2)').value = data.think || '';
+                document.querySelector('.practice-section input:nth-child(4)').value = data.feel || '';
+                document.querySelector('.practice-section input:nth-child(6)').value = data.act || '';
+                document.querySelector('.section:nth-child(5) textarea').value = data.decision || '';
+                document.querySelector('.other-input').value = data.otherAction || '';
+                
+                // Restore selected affirmations
+                data.selectedAffirmations?.forEach(text => {
+                    const affirmation = Array.from(document.querySelectorAll('.affirmation')).find(af => af.textContent === text);
+                    if (affirmation) affirmation.classList.add('selected');
+                });
+            }
+        }
+
+        function clearForm() {
+            if (confirm('Are you sure you want to clear all data?')) {
+                document.querySelectorAll('input, textarea').forEach(el => {
+                    if (el.type === 'checkbox' || el.type === 'radio') {
+                        el.checked = false;
+                    } else {
+                        el.value = '';
+                    }
+                });
+                document.querySelectorAll('.affirmation.selected').forEach(af => {
+                    af.classList.remove('selected');
+                });
+                localStorage.removeItem('sessionNotecard');
+            }
+        }
+
+        function saveData() {
+            saveFormData();
+            alert('Progress saved! Your data will be restored when you return to this page.');
+        }
+
+        // Auto-save on input changes
+        document.addEventListener('input', saveFormData);
+        document.addEventListener('change', saveFormData);
+
+        // Load saved data on page load
+        document.addEventListener('DOMContentLoaded', loadFormData);
+
+        // Set today's date by default
+        document.getElementById('sessionDate').value = new Date().toISOString().split('T')[0];
+    </script>
+
+</body></html>
