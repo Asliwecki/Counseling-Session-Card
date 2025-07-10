@@ -251,46 +251,132 @@
 
         /* Print styles */
         @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
             body {
                 background: white;
                 padding: 0;
                 margin: 0;
             }
 
-            .header, .controls {
+            .header, .controls, .flip-instruction {
                 display: none;
             }
 
             .card-container {
-                display: block;
-                margin: 0;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 0.5in;
+                margin: 0.5in;
                 padding: 0;
             }
 
             .notecard {
                 width: 5in;
                 height: 3in;
-                margin: 0.25in;
+                margin: 0;
                 box-shadow: none;
-                border: 1px solid #ccc;
+                border: 2px solid #333;
                 page-break-inside: avoid;
-                font-size: 12px;
+                padding: 0.15in;
+                font-size: 9px;
+                background: white;
             }
 
-            .notecard-back {
+            .notecard-front {
+                min-height: auto;
+                height: 100%;
+            }
+
+            .section-title {
                 font-size: 8px;
+                margin-bottom: 4px;
+                color: #333 !important;
+                font-weight: bold;
+            }
+
+            .section {
+                margin-bottom: 8px;
+            }
+
+            .text-input, .other-input {
+                font-size: 8px;
+                border-bottom: 1px solid #333 !important;
+                background: white;
+            }
+
+            .alignment-options {
+                gap: 8px;
+            }
+
+            .alignment-option {
+                font-size: 7px;
+            }
+
+            .practice-section {
+                gap: 3px 8px;
+                font-size: 8px;
+            }
+
+            .lock-in-options {
+                gap: 4px;
+            }
+
+            .lock-in-option {
+                font-size: 7px;
+            }
+
+            .date-session {
+                font-size: 8px;
+                gap: 15px;
+            }
+
+            .card-header {
+                margin-bottom: 8px;
+                padding-bottom: 5px;
+                border-bottom: 1px solid #333 !important;
+            }
+
+            /* Back side print styling */
+            .notecard-back {
+                font-size: 6px;
+                line-height: 1.2;
                 columns: 2;
-                column-gap: 10px;
+                column-gap: 8px;
+                padding: 0.15in;
+                height: 100%;
+                overflow: hidden;
             }
 
             .back-title {
-                font-size: 10px;
+                font-size: 8px;
+                font-weight: bold;
+                color: #333 !important;
+                text-align: center;
+                margin-bottom: 6px;
+                column-span: all;
             }
 
             .affirmation {
-                font-size: 7px;
-                padding: 1px 3px;
-                margin: 1px;
+                font-size: 5px;
+                padding: 1px 2px;
+                margin: 1px 2px 1px 0;
+                background: #f0f0f0 !important;
+                border: 1px solid #ccc !important;
+                border-radius: 3px;
+                break-inside: avoid;
+                display: inline-block;
+            }
+
+            .affirmation.selected {
+                background: #333 !important;
+                color: white !important;
+                border-color: #333 !important;
             }
         }
 
